@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!--
+    Märket är vinringen ur appens eget mönster, läst som en kompassros.
+    Två figurer i en: märket ett glas lämnar på duken, och rosen som pekar ut
+    riktningen. Ingen flaska, inget glas — vid 60 pixlar hade båda blivit gröt.
+  -->
+  <defs>
+    <linearGradient id="ground" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#7d1c26"/>
+      <stop offset="52%" stop-color="#3d0e19"/>
+      <stop offset="100%" stop-color="#140407"/>
+    </linearGradient>
+    <radialGradient id="ember" cx="0.82" cy="0.12" r="0.55">
+      <stop offset="0%" stop-color="#c9713a" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#c9713a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#f4dcaa"/>
+      <stop offset="55%" stop-color="#eccb8c"/>
+      <stop offset="100%" stop-color="#c99a52"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#ground)"/>
+  <rect width="512" height="512" fill="url(#ember)"/>
+
+  <!-- Vinringen: aningen oval och med ojämn linjebredd, som ett verkligt märke -->
+  <ellipse cx="256" cy="258" rx="150" ry="143" fill="none" stroke="url(#gold)" stroke-width="15" opacity="0.95"/>
+  <path d="M148 172a150 143 0 0 1 196-26" fill="none" stroke="url(#gold)" stroke-width="23" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- Nålen: norr fylld, söder öppen — kompassens enda nödvändiga gest -->
+  <path d="M256 108 296 258 256 238Z" fill="url(#gold)"/>
+  <path d="M256 108 216 258 256 238Z" fill="#f4dcaa" opacity="0.55"/>
+  <path d="M256 408 296 258 256 278Z" fill="url(#gold)" opacity="0.32"/>
+  <path d="M256 408 216 258 256 278Z" fill="url(#gold)" opacity="0.18"/>
+
+  <circle cx="256" cy="258" r="17" fill="#140407"/>
+  <circle cx="256" cy="258" r="8" fill="url(#gold)"/>
+</svg>

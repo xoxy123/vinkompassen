@@ -1,0 +1,86 @@
+/*
+ * Service worker.
+ *
+ * Syftet är inte snabbhet utan täckning: källarplanet på ett Systembolag har
+ * sällan mottagning, och en app som säger "kunde inte ansluta" när man står
+ * framför hyllan är värdelös just när den behövs.
+ *
+ * Strategi per resurstyp:
+ *   - navigering: nät först, cache som reserv. Nytt innehåll vinner när det
+ *     går, men appen startar alltid.
+ *   - byggda tillgångar: cache först. De är innehållshashade, så en träff kan
+ *     aldrig vara inaktuell.
+ *   - typsnitt: cache först med lång livslängd.
+ *
+ * Ingen förhandscachning av en filnamnslista — filnamnen är hashade och listan
+ * hade behövt genereras vid bygget. I stället fylls cachen på under första
+ * besöket, vilket räcker: man hinner alltid använda appen en gång med täckning
+ * innan man står i butiken.
+ */
+
+const VERSION = 'vk-2'
+const SHELL = `${VERSION}-shell`
+const ASSETS = `${VERSION}-assets`
+const FONTS = `${VERSION}-fonts`
+const KEEP = new Set([SHELL, ASSETS, FONTS])
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(SHELL).then((cache) => cache.addAll(['./', './index.html', './manifest.webmanifest'])),
+  )
+  self.skipWaiting()
+})
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.filter((k) => !KEEP.has(k)).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim()),
+  )
+})
+
+async function cacheFirst(request, cacheName) {
+  const cache = await caches.open(cacheName)
+  const hit = await cache.match(request)
+  if (hit) return hit
+  const response = await fetch(request)
+  if (response.ok) cache.put(request, response.clone())
+  return response
+}
+
+async function networkFirst(request) {
+  const cache = await caches.open(SHELL)
+  try {
+    const response = await fetch(request)
+    if (response.ok) cache.put('./index.html', response.clone())
+    return response
+  } catch {
+    // Hash-routing betyder att varje vy ligger i samma dokument, så
+    // index.html räcker som reserv för alla sökvägar.
+    const cached = (await cache.match('./index.html')) ?? (await cache.match('./'))
+    if (cached) return cached
+    throw new Error('offline utan cachad app')
+  }
+}
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event
+  if (request.method !== 'GET') return
+
+  const url = new URL(request.url)
+
+  if (request.mode === 'navigate') {
+    event.respondWith(networkFirst(request))
+    return
+  }
+
+  if (url.origin === self.location.origin && /\/assets\/|\.(png|svg|webmanifest|ico)$/.test(url.pathname)) {
+    event.respondWith(cacheFirst(request, ASSETS))
+    return
+  }
+
+  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
+    event.respondWith(cacheFirst(request, FONTS))
+  }
+})
