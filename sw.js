@@ -80,6 +80,15 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
+  // Skanningsmotorn: wasm och språkdata, runt 5 MB som hämtas första gången
+  // någon skannar. De ändras bara när Tesseract uppdateras, så cache först är
+  // rätt — och det är skillnaden mellan att skanna i en källare med täckning
+  // och att skanna i en källare utan.
+  if (url.origin === self.location.origin && url.pathname.includes('/ocr/')) {
+    event.respondWith(cacheFirst(request, ASSETS))
+    return
+  }
+
   if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
     event.respondWith(cacheFirst(request, FONTS))
   }
