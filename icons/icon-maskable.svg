@@ -1,20 +1,48 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!--
+    Märket är ett fack med en flaska i — appens egen bild, och namnet självt.
+    Vinonest: vin i ett bo. Facket är behållaren och ritas som en kontur;
+    flaskan är innehållet och ritas fylld. Den skillnaden är hela läsningen,
+    och den överlever ner till sexton pixlar.
+
+    Gradienterna är userSpaceOnUse med flit. Standardvärdet objectBoundingBox
+    räknar om varje gradient efter formens egen ruta, och golvet är en vågrät
+    linje med noll höjd — en lodrät gradient kollapsar där och linjen målas som
+    ingenting alls. Den buggen fanns i första utkastet och syntes bara på just
+    den ena linjen.
+  -->
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="0.4" y2="1">
-      <stop offset="0%" stop-color="#7d1c26"/><stop offset="52%" stop-color="#3d0e19"/><stop offset="100%" stop-color="#140407"/>
+    <linearGradient id="ground" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="205" y2="512">
+      <stop offset="0%" stop-color="#7d1c26"/>
+      <stop offset="52%" stop-color="#3d0e19"/>
+      <stop offset="100%" stop-color="#140407"/>
     </linearGradient>
-    <linearGradient id="gd" x1="0" y1="0" x2="0.3" y2="1">
-      <stop offset="0%" stop-color="#f4dcaa"/><stop offset="55%" stop-color="#eccb8c"/><stop offset="100%" stop-color="#c99a52"/>
+    <radialGradient id="ember" gradientUnits="userSpaceOnUse" cx="420" cy="61" r="282">
+      <stop offset="0%" stop-color="#c9713a" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#c9713a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="140" y1="150" x2="300" y2="400">
+      <stop offset="0%" stop-color="#f4dcaa"/>
+      <stop offset="55%" stop-color="#eccb8c"/>
+      <stop offset="100%" stop-color="#c99a52"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" fill="url(#g)"/>
-  <g transform="translate(256 256) scale(0.66) translate(-256 -258)">
-    <ellipse cx="256" cy="258" rx="150" ry="143" fill="none" stroke="url(#gd)" stroke-width="15"/>
-    <path d="M148 172a150 143 0 0 1 196-26" fill="none" stroke="url(#gd)" stroke-width="23" stroke-linecap="round"/>
-    <path d="M256 108 296 258 256 238Z" fill="url(#gd)"/>
-    <path d="M256 108 216 258 256 238Z" fill="#f4dcaa" opacity="0.55"/>
-    <path d="M256 408 296 258 256 278Z" fill="url(#gd)" opacity="0.32"/>
-    <path d="M256 408 216 258 256 278Z" fill="url(#gd)" opacity="0.18"/>
-    <circle cx="256" cy="258" r="17" fill="#140407"/><circle cx="256" cy="258" r="8" fill="url(#gd)"/>
+
+  <!-- Krympt märke: Androids formklippning skär bort hörnen, och ett fack som
+       går ut i kanten hade kapats mitt i valvet. -->
+  <rect width="512" height="512" fill="url(#ground)"/>
+  <rect width="512" height="512" fill="url(#ember)"/>
+
+  <!-- Hela märket i en grupp, så att den maskerbara varianten bara ändrar en
+       siffra i stället för varje koordinat. -->
+  <g transform="translate(256 256) scale(0.66) translate(-256 -256)">
+    <g fill="none" stroke="url(#gold)" stroke-width="22" stroke-linecap="butt">
+      <!-- Valvet och dess två väggar i ett drag -->
+      <path d="M144 372 L144 232 A112 112 0 0 1 368 232 L368 372"/>
+      <!-- Golvet: märkets enda vågräta linje -->
+      <path d="M126 372 H386"/>
+    </g>
+    <!-- Flaskänden sedd rakt på, vilande på golvet -->
+    <circle cx="256" cy="283" r="68" fill="url(#gold)"/>
   </g>
 </svg>
