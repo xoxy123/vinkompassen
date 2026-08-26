@@ -18,11 +18,12 @@
  * innan man står i butiken.
  */
 
-const VERSION = 'vk-2'
+const VERSION = 'vk-3'
 const SHELL = `${VERSION}-shell`
 const ASSETS = `${VERSION}-assets`
 const FONTS = `${VERSION}-fonts`
-const KEEP = new Set([SHELL, ASSETS, FONTS])
+const DATA = `${VERSION}-data`
+const KEEP = new Set([SHELL, ASSETS, FONTS, DATA])
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -47,6 +48,32 @@ async function cacheFirst(request, cacheName) {
   const response = await fetch(request)
   if (response.ok) cache.put(request, response.clone())
   return response
+}
+
+/**
+ * Cache först, men hämta om i bakgrunden.
+ *
+ * Sortimentet är elva megabyte och uppdateras en gång i dygnet. Nät först
+ * hade betytt elva megabyte vid varje sidladdning för data som nästan alltid
+ * är oförändrad; cache först utan uppdatering hade betytt att priser och nya
+ * viner aldrig kom fram. Den här ger sidan datan direkt ur cachen och byter
+ * ut den tyst till nästa gång appen öppnas.
+ */
+async function staleWhileRevalidate(request, cacheName) {
+  const cache = await caches.open(cacheName)
+  const hit = await cache.match(request)
+
+  const uppdatering = fetch(request)
+    .then((response) => {
+      if (response.ok) cache.put(request, response.clone())
+      return response
+    })
+    .catch(() => null)
+
+  if (hit) return hit
+  const färsk = await uppdatering
+  if (färsk) return färsk
+  throw new Error('sortimentet saknas i cachen och nätet svarar inte')
 }
 
 async function networkFirst(request) {
@@ -77,6 +104,13 @@ self.addEventListener('fetch', (event) => {
 
   if (url.origin === self.location.origin && /\/assets\/|\.(png|svg|webmanifest|ico)$/.test(url.pathname)) {
     event.respondWith(cacheFirst(request, ASSETS))
+    return
+  }
+
+  // Sortimentet. Det här är filen appen inte kan vara utan — utan den finns
+  // inga viner att visa, och då hjälper det inte att skalet startar.
+  if (url.origin === self.location.origin && url.pathname.includes('/data/')) {
+    event.respondWith(staleWhileRevalidate(request, DATA))
     return
   }
 
