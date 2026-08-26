@@ -1,15 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <!--
-    Märket är ett fack med en flaska i — appens egen bild, och namnet självt.
-    Vinonest: vin i ett bo. Facket är behållaren och ritas som en kontur;
-    flaskan är innehållet och ritas fylld. Den skillnaden är hela läsningen,
-    och den överlever ner till sexton pixlar.
-
-    Gradienterna är userSpaceOnUse med flit. Standardvärdet objectBoundingBox
-    räknar om varje gradient efter formens egen ruta, och golvet är en vågrät
-    linje med noll höjd — en lodrät gradient kollapsar där och linjen målas som
-    ingenting alls. Den buggen fanns i första utkastet och syntes bara på just
-    den ena linjen.
+    Vinonests märke: sju flasködar i ett ställ, sedda rakt på.
+    Formen bor i scripts/make-icons.py och speglas i
+    src/components/Mark.tsx. Ändra aldrig bara den ena.
   -->
   <defs>
     <linearGradient id="ground" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="205" y2="512">
@@ -21,28 +14,44 @@
       <stop offset="0%" stop-color="#c9713a" stop-opacity="0.55"/>
       <stop offset="100%" stop-color="#c9713a" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="140" y1="150" x2="300" y2="400">
-      <stop offset="0%" stop-color="#f4dcaa"/>
-      <stop offset="55%" stop-color="#eccb8c"/>
-      <stop offset="100%" stop-color="#c99a52"/>
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="130" y1="120" x2="350" y2="410">
+      <stop offset="0%" stop-color="#f9e9c4"/>
+      <stop offset="50%" stop-color="#eccb8c"/>
+      <stop offset="100%" stop-color="#c08f4a"/>
     </linearGradient>
+    <!-- Vinet är en radiell gradient med sitt ljusa öga uppe till vänster,
+         inte en platt ton: alla sju ändarna ligger i samma ljus, och det är
+         det som gör klungan till ett rum i stället för ett mönster. -->
+    <radialGradient id="vin" gradientUnits="userSpaceOnUse" cx="216" cy="200" r="230">
+      <stop offset="0%" stop-color="#a83a49"/>
+      <stop offset="100%" stop-color="#4a1019"/>
+    </radialGradient>
   </defs>
 
-  <!-- Krympt märke: Androids formklippning skär bort hörnen, och ett fack som
-       går ut i kanten hade kapats mitt i valvet. -->
   <rect width="512" height="512" fill="url(#ground)"/>
   <rect width="512" height="512" fill="url(#ember)"/>
 
-  <!-- Hela märket i en grupp, så att den maskerbara varianten bara ändrar en
-       siffra i stället för varje koordinat. -->
-  <g transform="translate(256 256) scale(0.66) translate(-256 -256)">
-    <g fill="none" stroke="url(#gold)" stroke-width="22" stroke-linecap="butt">
-      <!-- Valvet och dess två väggar i ett drag -->
-      <path d="M144 372 L144 232 A112 112 0 0 1 368 232 L368 372"/>
-      <!-- Golvet: märkets enda vågräta linje -->
-      <path d="M126 372 H386"/>
-    </g>
-    <!-- Flaskänden sedd rakt på, vilande på golvet -->
-    <circle cx="256" cy="283" r="68" fill="url(#gold)"/>
+  <g transform="translate(256 256) scale(0.68) translate(-256 -256)">
+    <circle cx="256.0" cy="256.0" r="58.0" fill="url(#vin)" stroke="url(#gold)" stroke-width="9.0"/>
+    <circle cx="256.0" cy="256.0" r="19.7" fill="none" stroke="url(#gold)" stroke-width="3.1" opacity="0.45"/>
+    <path d="M206.5 241.8 A51.5 51.5 0 0 1 245.3 205.6" fill="none" stroke="#f9e9c4" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+    <circle cx="123.0" cy="256.0" r="58.0" fill="url(#vin)" stroke="url(#gold)" stroke-width="9.0"/>
+    <circle cx="123.0" cy="256.0" r="19.7" fill="none" stroke="url(#gold)" stroke-width="3.1" opacity="0.45"/>
+    <path d="M73.5 241.8 A51.5 51.5 0 0 1 112.3 205.6" fill="none" stroke="#f9e9c4" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+    <circle cx="389.0" cy="256.0" r="58.0" fill="url(#vin)" stroke="url(#gold)" stroke-width="9.0"/>
+    <circle cx="389.0" cy="256.0" r="19.7" fill="none" stroke="url(#gold)" stroke-width="3.1" opacity="0.45"/>
+    <path d="M339.5 241.8 A51.5 51.5 0 0 1 378.3 205.6" fill="none" stroke="#f9e9c4" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+    <circle cx="189.5" cy="371.2" r="58.0" fill="url(#vin)" stroke="url(#gold)" stroke-width="9.0"/>
+    <circle cx="189.5" cy="371.2" r="19.7" fill="none" stroke="url(#gold)" stroke-width="3.1" opacity="0.45"/>
+    <path d="M140.0 357.0 A51.5 51.5 0 0 1 178.8 320.8" fill="none" stroke="#f9e9c4" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+    <circle cx="322.5" cy="371.2" r="58.0" fill="url(#vin)" stroke="url(#gold)" stroke-width="9.0"/>
+    <circle cx="322.5" cy="371.2" r="19.7" fill="none" stroke="url(#gold)" stroke-width="3.1" opacity="0.45"/>
+    <path d="M273.0 357.0 A51.5 51.5 0 0 1 311.8 320.8" fill="none" stroke="#f9e9c4" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+    <circle cx="189.5" cy="140.8" r="58.0" fill="url(#vin)" stroke="url(#gold)" stroke-width="9.0"/>
+    <circle cx="189.5" cy="140.8" r="19.7" fill="none" stroke="url(#gold)" stroke-width="3.1" opacity="0.45"/>
+    <path d="M140.0 126.6 A51.5 51.5 0 0 1 178.8 90.4" fill="none" stroke="#f9e9c4" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+    <circle cx="322.5" cy="140.8" r="58.0" fill="url(#vin)" stroke="url(#gold)" stroke-width="9.0"/>
+    <circle cx="322.5" cy="140.8" r="19.7" fill="none" stroke="url(#gold)" stroke-width="3.1" opacity="0.45"/>
+    <path d="M273.0 126.6 A51.5 51.5 0 0 1 311.8 90.4" fill="none" stroke="#f9e9c4" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
   </g>
 </svg>
