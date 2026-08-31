@@ -36,9 +36,24 @@ const FONTS = `${VERSION}-fonts`
 const DATA = `${VERSION}-data`
 const KEEP = new Set([SHELL, ASSETS, FONTS, DATA])
 
+/*
+ * Skalet hämtas med `cache: 'reload'`.
+ *
+ * `cache.addAll` går genom webbläsarens vanliga HTTP-cache, och det räcker för
+ * att en ny installation ska frysa fast en gammal index.html. Det hände: en ny
+ * service worker installerades, rensade de gamla cacherna korrekt — och fyllde
+ * sin splitternya cache med den förra index.html, som pekade på förra buntens
+ * hash. Servern hade rätt fil, cachenamnet var rätt, och besökaren fick ändå
+ * den gamla appen. `reload` tvingar hämtningen förbi HTTP-cachen.
+ */
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(SHELL).then((cache) => cache.addAll(['./', './index.html', './manifest.webmanifest'])),
+    caches.open(SHELL).then(async (cache) => {
+      for (const url of ['./', './index.html', './manifest.webmanifest']) {
+        const response = await fetch(url, { cache: 'reload' })
+        if (response.ok) await cache.put(url, response)
+      }
+    }),
   )
   self.skipWaiting()
 })
