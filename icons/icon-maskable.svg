@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <!--
-    Vinonests märke: en graverad druvklase med vinlöv och ranka.
+    Vinvals märke: en graverad druvklase med vinlöv och ranka.
     Formen bor i scripts/make-icons.py och speglas i
     src/components/Mark.tsx. Ändra aldrig bara den ena.
   -->

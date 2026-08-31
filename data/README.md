@@ -1,16 +1,50 @@
-# Importera skarp Systembolagsdata
+# Skarp data
 
-Lägg filerna här och ladda om appen. Ingen kod behöver ändras — hittas
-`wines.json` (eller `wines.csv`) används den i stället för demosortimentet.
+`wines.json` finns redan här och innehåller Systembolagets vinsortiment.
+Hämta om det med:
 
 ```
-public/data/wines.json    sortimentet
-public/data/stores.json   butikerna
-public/data/stock.json    vilka varor som finns i vilken butik
+node scripts/import-systembolaget.mjs
 ```
 
-JSON eller CSV går lika bra. CSV får använda komma, semikolon eller tabb som
-avgränsare — parsern gissar rätt själv.
+## Var datan kommer ifrån
+
+Systembolaget stängde sin officiella produkt-API. Den öppna spegling som
+återstår hämtar samma data och publicerar den vidare:
+
+- <https://susbolaget.emrik.org/v1/products> (uppdateras 03:00 varje natt)
+- <https://github.com/C4illin/systembolaget-data>
+
+Det är en **tredjepartskälla**, inte Systembolaget själva.
+
+Importen tar bort elva varor som Systembolaget filar under Vin > Aperitifer men
+som är starksprit — Arak Jabalna 45 %, Fenjiu 53 %, Evan Williams 32,5 %. De är
+inte vin, och med dem i filen påstod sidhuvudet fler viner än appen kunde visa.
+
+## Vad som saknas
+
+Speglingen serverar bara produkter. Två filer fattas, och de är precis de två
+som skulle göra butiksfiltret skarpt i stället för uppskattat:
+
+| Fil | Läge | Följd |
+| --- | --- | --- |
+| `wines.json` | **finns** | 14 377 viner, 4 981 producenter |
+| `stores.json` | saknas | 84 inbyggda butiker används i stället |
+| `stock.json` | saknas | lagret uppskattas ur sortimentsklassen |
+
+Utan `stock.json` härleds butikslagret ur varje vins sortimentsklass — fast
+sortiment i nästan varje butik, tillfälligt i ett fåtal, och beställnings-
+sortiment i ingen alls. Tre av fyra viner är beställningsvaror. Fördelningen
+är stabil mellan sidladdningar men den är en gissning, och vinsidan säger det
+rakt ut. Se `src/lib/estimateStock.ts`.
+
+Båda filerna kräver en API-nyckel från Systembolaget för att hämtas skarpt.
+
+## Bara Sverige
+
+Importen är Systembolagets katalog. Norge, Finland och USA kör vidare på
+demosortimentet — deras butiker säljer inte det här sortimentet, och att visa
+det hade varit ett löfte appen inte kan hålla.
 
 ## wines
 
