@@ -18,7 +18,18 @@
  * innan man står i butiken.
  */
 
-const VERSION = 'vk-3'
+/*
+ * Versionen stämplas vid bygget av scripts/stage-pages.mjs, som byter ut
+ * platshållaren mot huvudbuntens innehållshash.
+ *
+ * Den var handskriven förut, och det höll precis så länge som någon kom ihåg
+ * att räkna upp den. Cachenamnet avgör vad `activate` rensar, så en glömd
+ * uppräkning betyder att varje återvändande besökare fortsätter få den gamla
+ * appen — för alltid. Det hände: en publicerad rättning nådde aldrig fram,
+ * och den enda synliga effekten var att sökningar gav noll träffar av skäl
+ * som inte längre fanns i koden.
+ */
+const VERSION = 'vk-BjN759Ht'
 const SHELL = `${VERSION}-shell`
 const ASSETS = `${VERSION}-assets`
 const FONTS = `${VERSION}-fonts`
