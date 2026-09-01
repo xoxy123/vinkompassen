@@ -29,7 +29,7 @@
  * och den enda synliga effekten var att sökningar gav noll träffar av skäl
  * som inte längre fanns i koden.
  */
-const VERSION = 'vk-C3dilhSh'
+const VERSION = 'vk-DxDIRN3v'
 const SHELL = `${VERSION}-shell`
 const ASSETS = `${VERSION}-assets`
 const FONTS = `${VERSION}-fonts`
